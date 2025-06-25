@@ -125,6 +125,7 @@ public class QuorumPeerMain {
             config.parse(args[0]);
         }
 
+        // 快照管理模块
         // Start and schedule the the purge task
         DatadirCleanupManager purgeMgr = new DatadirCleanupManager(
             config.getDataDir(),
@@ -144,6 +145,7 @@ public class QuorumPeerMain {
 
     public void runFromConfig(QuorumPeerConfig config) throws IOException, AdminServerException {
         try {
+            // 注册和log4j相关的jmx监控
             ManagedUtil.registerLog4jMBeans();
         } catch (JMException e) {
             LOG.warn("Unable to register log4j JMX control", e);
