@@ -857,6 +857,13 @@ public class DataTree {
         return this.processTxn(header, txn, false);
     }
 
+    /**
+     * 处理具体命令
+     * @param header 消息信息头，包含：clientID、cxid、zxid、消息类型
+     * @param txn 消息体
+     * @param isSubTxn
+     * @return 处理结果
+     */
     public ProcessTxnResult processTxn(TxnHeader header, Record txn, boolean isSubTxn) {
         ProcessTxnResult rc = new ProcessTxnResult();
 

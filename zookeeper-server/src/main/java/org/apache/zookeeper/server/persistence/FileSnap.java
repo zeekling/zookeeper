@@ -81,6 +81,7 @@ public class FileSnap implements SnapShot {
         File snap = null;
         long snapZxid = -1;
         boolean foundValid = false;
+        // 多个snapshot都要读取。
         for (int i = 0, snapListSize = snapList.size(); i < snapListSize; i++) {
             snap = snapList.get(i);
             LOG.info("Reading snapshot {}", snap);

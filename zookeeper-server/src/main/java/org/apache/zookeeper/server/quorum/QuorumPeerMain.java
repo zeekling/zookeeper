@@ -161,7 +161,9 @@ public class QuorumPeerMain {
             throw new IOException("Cannot boot MetricsProvider " + config.getMetricsProviderClassName(), error);
         }
         try {
+            // 初始化监控相关
             ServerMetrics.metricsProviderInitialized(metricsProvider);
+            // 初始化认证相关信息
             ProviderRegistry.initialize();
             ServerCnxnFactory cnxnFactory = null;
             ServerCnxnFactory secureCnxnFactory = null;
@@ -177,6 +179,7 @@ public class QuorumPeerMain {
             }
 
             quorumPeer = getQuorumPeer();
+            // 设置基础配置文件
             quorumPeer.setTxnFactory(new FileTxnSnapLog(config.getDataLogDir(), config.getDataDir()));
             quorumPeer.enableLocalSessions(config.areLocalSessionsEnabled());
             quorumPeer.enableLocalSessionsUpgrading(config.isLocalSessionsUpgradingEnabled());
@@ -215,6 +218,7 @@ public class QuorumPeerMain {
             // sets quorum sasl authentication configurations
             quorumPeer.setQuorumSaslEnabled(config.quorumEnableSasl);
             if (quorumPeer.isQuorumSaslAuthEnabled()) {
+                // 开启sasl之后，设置相关参数
                 quorumPeer.setQuorumServerSaslRequired(config.quorumServerRequireSasl);
                 quorumPeer.setQuorumLearnerSaslRequired(config.quorumLearnerRequireSasl);
                 quorumPeer.setQuorumServicePrincipal(config.quorumServicePrincipal);
@@ -228,6 +232,7 @@ public class QuorumPeerMain {
                 quorumPeer.setJvmPauseMonitor(new JvmPauseMonitor(config));
             }
 
+            // 开始启动
             quorumPeer.start();
             ZKAuditProvider.addZKStartStopAuditLog();
             quorumPeer.join();

@@ -251,6 +251,7 @@ public class FileTxnSnapLog {
      */
     public long restore(DataTree dt, Map<Long, Integer> sessions, PlayBackListener listener) throws IOException {
         long snapLoadingStartTime = Time.currentElapsedTime();
+        // 加载snapshot信息。
         long deserializeResult = snapLog.deserialize(dt, sessions);
         ServerMetrics.getMetrics().STARTUP_SNAP_LOAD_TIME.add(Time.currentElapsedTime() - snapLoadingStartTime);
         FileTxnLog txnLog = new FileTxnLog(dataDir);
@@ -264,6 +265,7 @@ public class FileTxnSnapLog {
         }
 
         RestoreFinalizer finalizer = () -> {
+            // 加载并处理log信息。
             long highestZxid = fastForwardFromEdits(dt, sessions, listener);
             // The snapshotZxidDigest will reset after replaying the txn of the
             // zxid in the snapshotZxidDigest, if it's not reset to null after
@@ -347,6 +349,7 @@ public class FileTxnSnapLog {
                     highestZxid = hdr.getZxid();
                 }
                 try {
+                    // 处理log信息
                     processTransaction(hdr, dt, sessions, itr.getTxn());
                     dt.compareDigest(hdr, itr.getTxn(), itr.getDigest());
                     txnLoaded++;
@@ -415,6 +418,7 @@ public class FileTxnSnapLog {
         Map<Long, Integer> sessions,
         Record txn) throws KeeperException.NoNodeException {
         ProcessTxnResult rc;
+        // 恢复Session。
         switch (hdr.getType()) {
         case OpCode.createSession:
             sessions.put(hdr.getClientId(), ((CreateSessionTxn) txn).getTimeOut());
