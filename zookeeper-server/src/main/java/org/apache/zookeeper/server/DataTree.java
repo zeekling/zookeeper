@@ -1354,6 +1354,10 @@ public class DataTree {
         serializeNodes(oa);
     }
 
+    /**
+     * 读取zookeeper的node信息，为树形结构
+     * @param ia 输入流
+     */
     public void deserialize(InputArchive ia, String tag) throws IOException {
         aclCache.deserialize(ia);
         nodes.clear();
@@ -1400,6 +1404,7 @@ public class DataTree {
         // we are done with deserializing the datatree
         // update the quotas - create path trie
         // and also update the stat nodes
+        // 读取quota信息
         setupQuota();
 
         aclCache.purgeUnused();

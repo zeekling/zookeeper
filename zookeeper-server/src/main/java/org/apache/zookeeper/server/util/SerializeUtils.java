@@ -142,9 +142,16 @@ public class SerializeUtils {
         return new TxnLogEntry(txn, hdr, digest);
     }
 
+    /**
+     * 读取session信息以及节点信息
+     * @param dt dataTree对象
+     * @param sessions 保存session的对象
+     */
     public static void deserializeSnapshot(DataTree dt, InputArchive ia, Map<Long, Integer> sessions) throws IOException {
+        // 读取session的个数
         int count = ia.readInt("count");
         while (count > 0) {
+            // 读取session的id和超时时间
             long id = ia.readLong("id");
             int to = ia.readInt("timeout");
             sessions.put(id, to);
@@ -156,6 +163,7 @@ public class SerializeUtils {
             }
             count--;
         }
+        // 读取node信息。
         dt.deserialize(ia, "tree");
     }
 
